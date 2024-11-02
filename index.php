@@ -1,8 +1,8 @@
-<?php
+ <?php
 session_start();
 $firstLetter = isset($_SESSION['user_name']) ? strtoupper($_SESSION['user_name'][0]) : null;
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-?>
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -227,7 +227,7 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
 
 // Show or hide elements based on the login status
-if (isLoggedIn === 'true') {
+if (isLoggedIn === true) {  // Changed 'true' (string) to true (boolean)
     document.getElementById("profile").style.display = "block";
     document.getElementById("login_btn").style.display = "none";
 } else {

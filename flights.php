@@ -1,3 +1,9 @@
+<?php
+session_start();
+$firstLetter = isset($_SESSION['user_name']) ? strtoupper($_SESSION['user_name'][0]) : null;
+$isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,17 +22,36 @@
   </head>
   <body>
     <div id="page1">
-    <nav id="nav">
-      <div class="nav__logo">Dreams Travlers</div>
-      <ul class="nav__links">
-        <li class="link"><a href="#">Home</a></li>
-        <li class="link"><a href="#">Hotels</a></li>
-        <li class="link"><a href="#">Cabs</a></li>
-        <li class="link"><a href="#">login</a></li>
-        
-      </ul>
-      <button class="btn">Contact</button>
-    </nav>
+    
+    <div id="wrap">
+        <nav>
+            <div class="nav__logo"><h3>Dreams Travlers</h3></div>
+            <div id="option">
+             <a href="./index.php">Home</a>
+             <a href="./flights.php">Flights</a>
+             <a href="./PHP/logout.php" id="logout">Cab</a>
+
+    <?php if ($isLoggedIn): ?>
+        <!-- Display profile when logged in -->
+        <div id="profile">
+            <button>
+                <img src="./imgs/client-1.jpg" alt="Profile Picture">
+            </button>
+            <div id="profile_box">
+                <p>Welcome, <?= htmlspecialchars($_SESSION['user_name']); ?></p>
+                <a href="./PHP/logout.php">Logout</a>
+            </div>
+        </div>
+    <?php else: ?>
+        <!-- Display login button when not logged in -->
+        <div id="login_btn">
+            <a href="./loginpage.php">Login</a>
+        </div>
+    <?php endif; ?>
+</div>
+
+        </nav>
+    </div>
 
     <header class="section__container header__container">
       <h1 class="section__header">Dreams Travlers<br />Where every journey become new Stroy</h1>
@@ -306,67 +331,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Inline JavaScript -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Navbar scroll effect
-        window.addEventListener("scroll", function () {
-          var navbar = document.getElementById("nav");
-          if (window.scrollY > 0) {
-            navbar.classList.add("nav-scrolled");
-          } else {
-            navbar.classList.remove("nav-scrolled");
-          }
-        });
-
-        // Trip type toggle
-        const oneWayBtn = document.getElementById("oneWay");
-        const roundTripBtn = document.getElementById("roundtrip");
-        const returnDate = document.getElementById("return-date");
-
-        oneWayBtn.addEventListener("click", function () {
-          returnDate.style.display = "none";
-          oneWayBtn.classList.add("active");
-          roundTripBtn.classList.remove("active");
-          oneWayBtn.setAttribute("aria-pressed", "true");
-          roundTripBtn.setAttribute("aria-pressed", "false");
-        });
-
-        roundTripBtn.addEventListener("click", function () {
-          returnDate.style.display = "block";
-          roundTripBtn.classList.add("active");
-          oneWayBtn.classList.remove("active");
-          roundTripBtn.setAttribute("aria-pressed", "true");
-          oneWayBtn.setAttribute("aria-pressed", "false");
-        });
-
-        // Initialize as One Way by default
-        oneWayBtn.click();
-      });
-
-
-      function getSuggestions(searchTerm, suggestionListId) {
-    if (searchTerm.length > 1) {  // Only search when 2+ characters entered
-        fetch(`fetch_suggestions.php?term=${searchTerm}`)  // Use backticks and dynamic search term
-            .then(response => response.json())
-            .then(data => {
-                let suggestionList = document.getElementById(suggestionListId);
-                suggestionList.innerHTML = "";  // Clear previous suggestions
-
-                data.forEach(item => {
-                    let listItem = document.createElement('li');
-                    listItem.textContent = item;
-                    listItem.onclick = function () {
-                        document.getElementById(suggestionListId.replace('Suggestions', 'Location')).value = item;
-                        suggestionList.innerHTML = "";  // Clear suggestions after selection
-                    };
-                    suggestionList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching suggestions:', error));
-    }
-}
-
-
+    <script src="./js/flight.js">
+     document.addEventListener('DOMContentLoaded', () => {
+        const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+        
+        if (isLoggedIn) {
+            document.getElementById('login_btn').style.display = 'none';
+            document.getElementById('profile').style.display = 'block';
+        } else {
+            document.getElementById('login_btn').style.display = 'block';
+            document.getElementById('profile').style.display = 'none';
+        }
+    });
     </script>
   </body>
 </html>
