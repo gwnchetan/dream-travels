@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --primary-color: rgb(80,67,216);
-  --primary-color-dark: rgba(79, 67, 216, 0.439);
+  --primary-color: rgb(141,44,205);
+  --primary-color-dark: rgb(244,228,255);
   --text-dark: #000000;
   --text-light: #878581;
   --extra-light: #f3f4f6;
@@ -100,7 +100,80 @@ nav {
   color: white;
   font-size: 20px;
   font-weight: bold;
-} 
+}
+#profile_box {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 250px;
+  background-color: #2c2c2c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  color: #ffffff;
+  display: none;
+  z-index: 100;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.profile-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.profile-email {
+  font-size: 12px;
+  color: #a5a5a5;
+}
+
+.profile-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.profile-menu li {
+  margin-bottom: 10px;
+}
+
+.profile-menu li a {
+  text-decoration: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.profile-menu li a i {
+  margin-right: 10px;
+}
+
+.profile-mode {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.mode-toggle {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+
 
 .header__container {
   padding: 1rem 1rem 5rem 1rem;
@@ -327,7 +400,7 @@ nav {
 }
 
 .footer {
-  background-color: rgb(0, 0, 0);
+  background-color: var(--primary-color-dark);
 }
 
 .footer__container {
@@ -358,7 +431,7 @@ nav {
 }
 
 .footer__col p:hover {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .footer__bar {
@@ -385,6 +458,30 @@ nav {
 }
 
 @media (width < 900px) {
+  #warp{
+    width: 100%;
+    height: 60px;
+    background-color: aqua;
+  } 
+  nav {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+  }
+  #option a{
+      width: 100%;
+      padding-left: 3vw;
+    }
+    #nav__logo{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+     
+    }
   .booking__container form {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -405,7 +502,7 @@ nav {
 }
 
 @media (width < 600px) {
-  .nav__links {
+  nav {
     display: none;
   }
 

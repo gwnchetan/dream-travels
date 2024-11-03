@@ -1,8 +1,16 @@
- <?php
+<?php
 session_start();
-$firstLetter = isset($_SESSION['user_name']) ? strtoupper($_SESSION['user_name'][0]) : null;
+
+// Check if user is logged in
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-?> 
+
+// Get user's first letter of first name, if available
+$firstLetter = $isLoggedIn && isset($_SESSION['fname']) ? strtoupper($_SESSION['fname'][0]) : null;
+
+// Combine first and last name for full name display, if available
+$userFullName = $isLoggedIn ? $_SESSION['fname'] . ' ' . $_SESSION['lname'] : null;
+$userEmail = $isLoggedIn ? $_SESSION['email'] : null;
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,30 +23,41 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
   </head>
   <body>
   
-  
   <div id="wrap">
-        <nav>
-            <div class="nav__logo"><h3>Logo Here</h3></div>
-            <div id="option">
-                <a href="./PHP/logout.php" id="logout">Home</a>
-                <a href="./flights.php">Flights</a>
-                <a href="#">Cab</a>
+    <nav>
+        <div class="nav__logo"><h3>Dreams Travelers</h3></div>
+        <div id="option">
+            <a href="#">Home</a>
+            <a href="./flights.php">Flights</a>
+            <a href="#">Cab</a>
 
-                <!-- Login and Profile sections based on login status -->
-                <div id="login_btn" style="display: none;">
-                    <a href="./loginpage.php">Login</a>
-                </div>
-                <div id="profile" style="display: none;">
-                    <button>
-                        <img src="./imgs/client-1.jpg" alt="Profile Picture">
-                    </button>
-                    <div id="profile_box">
-                    </div>
-                </div>
+            <!-- Profile section -->
+            <div id="profile" style="display: <?php echo $isLoggedIn ? 'block' : 'none'; ?>;" onclick="toggleProfileBox()">
+                <img src="./imgs/client-1.jpg" alt="Profile Picture">
             </div>
-        </nav>
-    </div>
-    
+            <div id="login_btn" style="display: <?php echo $isLoggedIn ? 'none' : 'block'; ?>;">
+                <a href="./loginpage.php">Login</a>
+            </div>
+
+            <!-- Profile box -->
+            <div id="profile_box" style="display: none;">
+                <div class="profile-info">
+                    <img src="./imgs/client-1.jpg" alt="Profile Picture" class="profile-pic">
+                    <p class="profile-name"><?php echo htmlspecialchars($userFullName); ?></p>
+                    <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
+                </div>
+                <ul class="profile-menu">
+                    <li><a href="./bookings.php"><i class="ri-bookmark-line"></i> My Bookings</a></li>
+                    <li><a href="./wishlist.php"><i class="ri-heart-line"></i> My Wishlist</a></li>
+                    <li><a href="./settings.php"><i class="ri-settings-line"></i> Settings</a></li>
+                    <li><a href="./help.php"><i class="ri-question-line"></i> Help Center</a></li>
+                    <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
 
 
     <header class="section__container header__container">
@@ -196,7 +215,7 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
           </p>
           <p>
             With a user-friendly interface and a vast selection of hotels,
-            WDM&Co aims to provide a stress-free experience for travelers
+            Dreams Travlers aims to provide a stress-free experience for travelers
             seeking the perfect stay.
           </p>
         </div>
@@ -224,16 +243,33 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
      </footer>
   </body>
   <script>
-const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+document.addEventListener('DOMContentLoaded', function () {
+    const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+    
+    // Show or hide elements based on the login status
+    if (isLoggedIn) {
+        document.getElementById("profile").style.display = "block";
+        document.getElementById("login_btn").style.display = "none";
+    } else {
+        document.getElementById("profile").style.display = "none";
+        document.getElementById("login_btn").style.display = "block";
+    }
 
-// Show or hide elements based on the login status
-if (isLoggedIn === true) {  // Changed 'true' (string) to true (boolean)
-    document.getElementById("profile").style.display = "block";
-    document.getElementById("login_btn").style.display = "none";
-} else {
-    document.getElementById("profile").style.display = "none";
-    document.getElementById("login_btn").style.display = "block";
-}
+    const profileIcon = document.querySelector('#profile');
+    const profileBox = document.querySelector('#profile_box');
 
-  </script>
+    // Toggle profile box visibility on profile icon click
+    profileIcon.addEventListener('click', function (event) {
+        event.stopPropagation();  // Prevents the event from propagating to document click
+        profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close profile box if clicked outside of it
+    document.addEventListener('click', function (event) {
+        if (!profileIcon.contains(event.target) && !profileBox.contains(event.target)) {
+            profileBox.style.display = 'none';
+        }
+    });
+});
+</script>
 </html>

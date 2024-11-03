@@ -79,6 +79,10 @@ nav {
   justify-content: space-between;
   align-items: center;
 }
+.nav_logo h3{
+  font-weight: 600;
+  font-size: 25px;
+}
 #option {
   width: 50%;
   display: flex;
@@ -118,6 +122,10 @@ nav {
   font-weight: bold;
 } 
 
+.header__container{
+  margin-top: 70px;
+
+}
 .link a {
   font-weight: 500;
   color: var(--text-light);
@@ -610,7 +618,7 @@ img {
 }
 
 .footer {
-  background-color: var(--primary-color);
+  background-color: rgb(141,44,205);
 }
 
 .footer__container {

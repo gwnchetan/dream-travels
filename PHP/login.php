@@ -9,7 +9,7 @@ function getUserIpAddress() {
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         return $_SERVER['HTTP_X_FORWARDED_FOR'];
     } else {
-        return ($_SERVER['REMOTE_ADDR'] === '::1') ? '127.0.0.1' : $_SERVER['REMOTE_ADDR']; // Convert '::1' to '127.0.0.1'
+        return ($_SERVER['REMOTE_ADDR'] === '::1') ? '127.0.0.1' : $_SERVER['REMOTE_ADDR'];
     }
 }
 
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: loginpage.php?error=" . urlencode($errorMessage));
         exit();
     } else {
-        // Check if email exists in the user table
+        // Check if email exists in the user table and fetch related data from person table
         $stmt = $conn->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Verify the password
             if (password_verify($password, $hashedPassword)) {
-                // Successful login
+                // Successful login: Store user data in session
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['email'] = $dbEmail;
                 $_SESSION['fname'] = $fname;

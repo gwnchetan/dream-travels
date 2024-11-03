@@ -25,9 +25,9 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
     
     <div id="wrap">
         <nav>
-            <div class="nav__logo"><h3>Dreams Travlers</h3></div>
+            <div class="nav_logo"><h3>Dreams Travlers</h3></div>
             <div id="option">
-             <a href="./index.php">Home</a>
+             <a href="./index.php">Hotels</a>
              <a href="./flights.php">Flights</a>
              <a href="./PHP/logout.php" id="logout">Cab</a>
 
