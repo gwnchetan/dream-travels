@@ -34,25 +34,3 @@ document.addEventListener("DOMContentLoaded", function () {
     oneWayBtn.click();
   });
 
-
-  function getSuggestions(searchTerm, suggestionListId) {
-if (searchTerm.length > 1) {  // Only search when 2+ characters entered
-    fetch(`fetch_suggestions.php?term=${searchTerm}`)  // Use backticks and dynamic search term
-        .then(response => response.json())
-        .then(data => {
-            let suggestionList = document.getElementById(suggestionListId);
-            suggestionList.innerHTML = "";  // Clear previous suggestions
-
-            data.forEach(item => {
-                let listItem = document.createElement('li');
-                listItem.textContent = item;
-                listItem.onclick = function () {
-                    document.getElementById(suggestionListId.replace('Suggestions', 'Location')).value = item;
-                    suggestionList.innerHTML = "";  // Clear suggestions after selection
-                };
-                suggestionList.appendChild(listItem);
-            });
-        })
-        .catch(error => console.error('Error fetching suggestions:', error));
-}
-}

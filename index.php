@@ -49,7 +49,7 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
                 <ul class="profile-menu">
                     <li><a href="./bookings.php"><i class="ri-bookmark-line"></i> My Bookings</a></li>
                     <li><a href="./wishlist.php"><i class="ri-heart-line"></i> My Wishlist</a></li>
-                    <li><a href="./settings.php"><i class="ri-settings-line"></i> Settings</a></li>
+                    <li><a href="./profilepage.php"><i class="ri-settings-line"></i> Settings</a></li>
                     <li><a href="./help.php"><i class="ri-question-line"></i> Help Center</a></li>
                     <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
                 </ul>

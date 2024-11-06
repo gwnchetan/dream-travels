@@ -1,8 +1,17 @@
 <?php
 session_start();
-$firstLetter = isset($_SESSION['user_name']) ? strtoupper($_SESSION['user_name'][0]) : null;
+
+// Check if user is logged in
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-?> 
+
+// Get user's first letter of first name, if available
+$firstLetter = $isLoggedIn && isset($_SESSION['fname']) ? strtoupper($_SESSION['fname'][0]) : null;
+
+// Combine first and last name for full name display, if available
+$userFullName = $isLoggedIn ? $_SESSION['fname'] . ' ' . $_SESSION['lname'] : null;
+$userEmail = $isLoggedIn ? $_SESSION['email'] : null;
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,38 +31,42 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
   </head>
   <body>
     <div id="page1">
-    
     <div id="wrap">
         <nav>
-            <div class="nav_logo"><h3>Dreams Travlers</h3></div>
-            <div id="option">
-             <a href="./index.php">Hotels</a>
-             <a href="./flights.php">Flights</a>
-             <a href="./PHP/logout.php" id="logout">Cab</a>
+          <div class="nav__logo"><h3>Dreams Travelers</h3></div>
+          <div id="option">
+            <a href="./index.php">Home</a>
+            <a href="./flights.php">Flights</a>
+            <a href="#">Cab</a>
 
-    <?php if ($isLoggedIn): ?>
-        <!-- Display profile when logged in -->
-        <div id="profile">
-            <button>
-                <img src="./imgs/client-1.jpg" alt="Profile Picture">
-            </button>
-            <div id="profile_box">
-                <p>Welcome, <?= htmlspecialchars($_SESSION['user_name']); ?></p>
-                <a href="./PHP/logout.php">Logout</a>
+            <!-- Profile section -->
+            <div id="profile" style="display: <?php echo $isLoggedIn ? 'block' : 'none'; ?>;">
+                <img src="./imgs/client-1.jpg" alt="Profile Picture" onclick="toggleProfileBox()" />
             </div>
-        </div>
-    <?php else: ?>
-        <!-- Display login button when not logged in -->
-        <div id="login_btn">
-            <a href="./loginpage.php">Login</a>
-        </div>
-    <?php endif; ?>
-</div>
+            <div id="login_btn" style="display: <?php echo $isLoggedIn ? 'none' : 'block'; ?>;">
+                <a href="./loginpage.php">Login</a>
+            </div>
 
+            <!-- Profile box -->
+            <div id="profile_box" style="display: none;">
+                <div class="profile-info">
+                    <img src="./imgs/client-1.jpg" alt="Profile Picture" class="profile-pic">
+                    <p class="profile-name"><?php echo htmlspecialchars($userFullName); ?></p>
+                    <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
+                </div>
+                <ul class="profile-menu">
+                    <li><a href="./bookings.php"><i class="ri-bookmark-line"></i> My Bookings</a></li>
+                    <li><a href="./wishlist.php"><i class="ri-heart-line"></i> My Wishlist</a></li>
+                    <li><a href="./settings.php"><i class="ri-settings-line"></i> Settings</a></li>
+                    <li><a href="./help.php"><i class="ri-question-line"></i> Help Center</a></li>
+                    <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
+                </ul>
+            </div>
+          </div>
         </nav>
-    </div>
-
-    <header class="section__container header__container">
+      </div>
+      
+<header class="section__container header__container">
       <h1 class="section__header">Dreams Travlers<br />Where every journey become new Stroy</h1>
       <img src="./imgs/header.jpg" alt="header" />
     </header>
@@ -331,8 +344,8 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Inline JavaScript -->
-    <script src="./js/flight.js">
-     document.addEventListener('DOMContentLoaded', () => {
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
         const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
         
         if (isLoggedIn) {
@@ -342,7 +355,22 @@ $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
             document.getElementById('login_btn').style.display = 'block';
             document.getElementById('profile').style.display = 'none';
         }
-    });
+      });
+
+      const profileIcon = document.querySelector('#profile img');
+      const profileBox = document.querySelector('#profile_box');
+
+      // Toggle profile box visibility on profile icon click
+      function toggleProfileBox() {
+          profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
+      }
+
+      // Close profile box if clicked outside of it
+      document.addEventListener('click', function (event) {
+          if (!profileIcon.contains(event.target) && !profileBox.contains(event.target)) {
+              profileBox.style.display = 'none';
+          }
+      });
     </script>
   </body>
 </html>

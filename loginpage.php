@@ -21,6 +21,7 @@ function getUserIpAddress() {
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="./CSS/login.css">
     <title>Login Page</title>
 </head>
@@ -83,9 +84,10 @@ function getUserIpAddress() {
                 <span> Or sign in with </span>
             </div>
 
-            <button class="social-login google btn btn-light">
+            <button id="googleLoginButton" class="social-login google btn btn-light" data-clientid="801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com">
                 <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
+
             <button class="social-login facebook btn btn-primary">
                 <img src="./imgs/facebook.svg" alt="Facebook Icon"> Continue with Facebook
             </button>
@@ -124,9 +126,10 @@ function getUserIpAddress() {
                 <span>Or sign in with</span>
             </div>
 
-            <button class="social-login google btn btn-light">
+            <button id="googleLoginButton" class="social-login google btn btn-light" data-clientid="801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com">
                 <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
+
             <button class="social-login facebook btn btn-primary">
                 <img src="./imgs/facebook.svg" alt="Facebook Icon"> Continue with Facebook
             </button>
@@ -135,8 +138,7 @@ function getUserIpAddress() {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-<!-- Custom JS -->
+<script src="./js/login.js"></script>
 <script>
 // Set the IP address using PHP
 document.getElementById('ipAddress').value = '<?php echo getUserIpAddress(); ?>';
@@ -148,6 +150,5 @@ document.getElementById('deviceInfo').value = JSON.stringify({
     appVersion: navigator.appVersion
 });
 </script>
-<script src="./js/login.js"></script>
 </body>
 </html>

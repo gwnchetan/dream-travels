@@ -2,7 +2,6 @@
 session_start();
 require_once './config.php';
 
-// Function to get the user's IP address
 function getUserIpAddress() {
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         return $_SERVER['HTTP_CLIENT_IP'];
@@ -13,7 +12,6 @@ function getUserIpAddress() {
     }
 }
 
-// Function to parse and extract OS information
 function getOSInfo($userAgent) {
     $osArray = [
         'Windows' => '/Windows NT ([0-9.]+)/',
@@ -30,14 +28,12 @@ function getOSInfo($userAgent) {
     return 'Unknown OS';
 }
 
-// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $ipAddress = getUserIpAddress();
     $deviceInfo = getOSInfo($_SERVER['HTTP_USER_AGENT']);
 
-    // Server-side validations
     if (empty($email) || empty($password)) {
         $errorMessage = 'Email and password are required.';
         header("Location: loginpage.php?error=" . urlencode($errorMessage));
@@ -47,7 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: loginpage.php?error=" . urlencode($errorMessage));
         exit();
     } else {
-        // Check if email exists in the user table and fetch related data from person table
         $stmt = $conn->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -57,16 +52,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_result($userId, $dbEmail, $hashedPassword, $fname, $lname);
             $stmt->fetch();
 
-            // Verify the password
             if (password_verify($password, $hashedPassword)) {
-                // Successful login: Store user data in session
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['email'] = $dbEmail;
                 $_SESSION['fname'] = $fname;
                 $_SESSION['lname'] = $lname;
                 $_SESSION['logged_in'] = true;
 
-                // Log user activity
                 $stmt = $conn->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
                 $loginMethod = 'Email/Password';
                 $stmt->bind_param("isss", $userId, $ipAddress, $deviceInfo, $loginMethod);
