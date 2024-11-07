@@ -83,9 +83,11 @@ function getUserIpAddress() {
             <div class="divider">
                 <span> Or sign in with </span>
             </div>
-
-            <button id="googleLoginButton" class="social-login google btn btn-light" data-clientid="801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com">
-                <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
+         
+            <button id="googleLoginButton" 
+                    class="social-login google btn btn-light" 
+                    data-login_uri="/path-to-your-server/google_callback.php">
+                    <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
 
             <button class="social-login facebook btn btn-primary">
@@ -126,9 +128,12 @@ function getUserIpAddress() {
                 <span>Or sign in with</span>
             </div>
 
-            <button id="googleLoginButton" class="social-login google btn btn-light" data-clientid="801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com">
-                <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
+            <button id="googleLoginButton" 
+                    class="social-login google btn btn-light" 
+                    data-login_uri="/path-to-your-server/google_callback.php">
+                    <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
+
 
             <button class="social-login facebook btn btn-primary">
                 <img src="./imgs/facebook.svg" alt="Facebook Icon"> Continue with Facebook
@@ -140,6 +145,41 @@ function getUserIpAddress() {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="./js/login.js"></script>
 <script>
+
+    // Initialize Google Sign-In
+function handleCredentialResponse(response) {
+    // Send the ID token to the server for verification
+    fetch(document.getElementById('googleLoginButton').dataset.login_uri, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `id_token=${response.credential}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = './index.php'; // Redirect after successful login
+        } else {
+            alert('Google login failed.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Attach the Google login callback
+window.onload = function() {
+    google.accounts.id.initialize({
+        client_id: '801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com',
+        callback: handleCredentialResponse
+    });
+    google.accounts.id.renderButton(
+        document.getElementById('googleLoginButton'),
+        { theme: 'outline', size: 'large' } // Customize button appearance
+    );
+    google.accounts.id.prompt(); // Prompt the user to select an account
+};
+
 // Set the IP address using PHP
 document.getElementById('ipAddress').value = '<?php echo getUserIpAddress(); ?>';
 

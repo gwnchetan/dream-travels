@@ -111,35 +111,3 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-
-    window.onload = function() {
-        google.accounts.id.initialize({
-            client_id: "801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com",
-            callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(
-            document.getElementById("googleLoginButton"), {
-                theme: "outline",
-                size: "large"
-            }
-        );
-    }
-    
-    function handleCredentialResponse(response) {
-        // Send the token to the server for validation
-        fetch('./PHP/google-login.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id_token: response.credential })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = "../index.php";
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    
