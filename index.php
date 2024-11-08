@@ -1,19 +1,23 @@
 <?php
 session_start();
 
-// Check if user is logged in
+// Check if the user is logged in (either through Google or a traditional login)
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 
-// Get user's first letter of first name, if available
-$firstLetter = $isLoggedIn && isset($_SESSION['fname']) ? strtoupper($_SESSION['fname'][0]) : null;
+// Determine login type and set the profile image
+if (isset($_SESSION['google_logged_in']) && $_SESSION['google_logged_in'] === true) {
+    $isLoggedIn = true;
+    $profilePicture = $_SESSION['profile_picture']; // Google profile picture
+} else {
+    $profilePicture = './imgs/default-profile.png'; // Default profile image for traditional login
+}
 
-// Combine first and last name for full name display, if available
-$userFullName = $isLoggedIn ? $_SESSION['fname'] . ' ' . $_SESSION['lname'] : null;
+// Combine first and last name for full name display
+$userFullName = $isLoggedIn ? ($_SESSION['fname'] . ' ' . $_SESSION['lname']) : null;
 $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
-?>
 
+?>
 <!DOCTYPE html>
-<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,7 +26,6 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
     <title>Hotel</title>
   </head>
   <body>
-  
   <div id="wrap">
     <nav>
         <div class="nav__logo"><h3>Dreams Travelers</h3></div>
@@ -33,7 +36,7 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
 
             <!-- Profile section -->
             <div id="profile" style="display: <?php echo $isLoggedIn ? 'block' : 'none'; ?>;" onclick="toggleProfileBox()">
-                <img src="./imgs/client-1.jpg" alt="Profile Picture">
+                <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture">
             </div>
             <div id="login_btn" style="display: <?php echo $isLoggedIn ? 'none' : 'block'; ?>;">
                 <a href="./loginpage.php">Login</a>
@@ -42,7 +45,7 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
             <!-- Profile box -->
             <div id="profile_box" style="display: none;">
                 <div class="profile-info">
-                    <img src="./imgs/client-1.jpg" alt="Profile Picture" class="profile-pic">
+                    <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture" class="profile-pic">
                     <p class="profile-name"><?php echo htmlspecialchars($userFullName); ?></p>
                     <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
                 </div>
@@ -57,8 +60,6 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
         </div>
     </nav>
 </div>
-
-
 
     <header class="section__container header__container">
       <div class="header__image__container">
@@ -242,19 +243,9 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
       </div>
      </footer>
   </body>
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
-    
-    // Show or hide elements based on the login status
-    if (isLoggedIn) {
-        document.getElementById("profile").style.display = "block";
-        document.getElementById("login_btn").style.display = "none";
-    } else {
-        document.getElementById("profile").style.display = "none";
-        document.getElementById("login_btn").style.display = "block";
-    }
 
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.querySelector('#profile');
     const profileBox = document.querySelector('#profile_box');
 
@@ -272,4 +263,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-</html>
+</>
+</>

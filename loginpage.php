@@ -85,10 +85,11 @@ function getUserIpAddress() {
             </div>
          
             <button id="googleLoginButton" 
-                    class="social-login google btn btn-light" 
-                    data-login_uri="/path-to-your-server/google_callback.php">
-                    <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
+                     class="social-login google btn btn-light" 
+                     data-login_uri="/path-to-your-server/google_callback.php">
+            <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
+
 
             <button class="social-login facebook btn btn-primary">
                 <img src="./imgs/facebook.svg" alt="Facebook Icon"> Continue with Facebook
@@ -124,36 +125,14 @@ function getUserIpAddress() {
                 <button type="submit" class="login-btn btn btn-success">Sign up</button>
             </form>
 
-            <div class="divider">
-                <span>Or sign in with</span>
-            </div>
-
-            <button id="googleLoginButton" 
-                    class="social-login google btn btn-light" 
-                    data-login_uri="/path-to-your-server/google_callback.php">
-                    <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
-            </button>
-
-
-            <button class="social-login facebook btn btn-primary">
-                <img src="./imgs/facebook.svg" alt="Facebook Icon"> Continue with Facebook
-            </button>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="./js/login.js"></script>
 <script>
-
-    // Initialize Google Sign-In
+// Initialize Google Sign-In
 function handleCredentialResponse(response) {
-    // Send the ID token to the server for verification
     fetch(document.getElementById('googleLoginButton').dataset.login_uri, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `id_token=${response.credential}`
     })
     .then(response => response.json())
@@ -167,27 +146,27 @@ function handleCredentialResponse(response) {
     .catch(error => console.error('Error:', error));
 }
 
-// Attach the Google login callback
 window.onload = function() {
     google.accounts.id.initialize({
-        client_id: '801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com',
+        client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
         callback: handleCredentialResponse
     });
     google.accounts.id.renderButton(
         document.getElementById('googleLoginButton'),
-        { theme: 'outline', size: 'large' } // Customize button appearance
+        { theme: 'outline', size: 'large' }
     );
-    google.accounts.id.prompt(); // Prompt the user to select an account
+    google.accounts.id.prompt();
 };
 
-// Set the IP address using PHP
-document.getElementById('ipAddress').value = '<?php echo getUserIpAddress(); ?>';
+// Form toggle for login and registration
+document.getElementById('from1').addEventListener('click', () => {
+    document.getElementById('from_part').style.display = 'none';
+    document.getElementById('regis_from').style.display = 'block';
+});
 
-// Set device information using JavaScript
-document.getElementById('deviceInfo').value = JSON.stringify({
-    userAgent: navigator.userAgent,
-    platform: navigator.platform,
-    appVersion: navigator.appVersion
+document.getElementById('from2').addEventListener('click', () => {
+    document.getElementById('from_part').style.display = 'block';
+    document.getElementById('regis_from').style.display = 'none';
 });
 </script>
 </body>

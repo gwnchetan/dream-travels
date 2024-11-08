@@ -58,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['fname'] = $fname;
                 $_SESSION['lname'] = $lname;
                 $_SESSION['logged_in'] = true;
+                $_SESSION['auth_provider'] = 'Email/Password'; // New for consistency with Google login
 
                 $stmt = $conn->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
                 $loginMethod = 'Email/Password';
