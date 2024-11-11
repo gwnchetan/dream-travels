@@ -21,9 +21,18 @@ if (isset($_GET['code'])) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
+
+    if ($response === false) {
+        die('Curl error: ' . curl_error($ch));
+    }
+
     curl_close($ch);
-    
     $token_data = json_decode($response, true);
+
+    // Check for any errors in the response
+    if (isset($token_data['error'])) {
+        die('Google API error: ' . $token_data['error_description']);
+    }
 
     if (isset($token_data['access_token'])) {
         $access_token = $token_data['access_token'];
@@ -34,7 +43,7 @@ if (isset($_GET['code'])) {
         $user_data = json_decode($user_info, true);
 
         if (isset($user_data['email'])) {
-            $_SESSION['loggedin'] = true;
+            $_SESSION['logged_in'] = true;
             $_SESSION['fname'] = $user_data['given_name'];
             $_SESSION['lname'] = $user_data['family_name'];
             $_SESSION['email'] = $user_data['email'];
@@ -54,11 +63,13 @@ if (isset($_GET['code'])) {
             // Redirect to index page
             header('Location: ../index.php');
             exit();
+        } else {
+            die("Error retrieving user data!");
         }
     } else {
-        echo "Error fetching access token!";
+        die("Error fetching access token!");
     }
 } else {
-    echo "No authorization code provided!";
+    die("No authorization code provided!");
 }
 ?>

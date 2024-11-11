@@ -11,11 +11,11 @@ if (!isset($_SESSION['email'])) {
 // Fetch user data based on email
 $user_email = $_SESSION['email'];
 $query = "SELECT * FROM person WHERE email = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $user_email);
-$stmt->execute();
-$result = $stmt->get_result();
-$user_data = $result->fetch_assoc();
+$stmt = $pdo->prepare($query); // Use $pdo instead of $conn
+
+// Execute the query with the email as a parameter
+$stmt->execute([$user_email]);
+$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user_data) {
     echo "User data not found.";
@@ -99,21 +99,6 @@ $is_google_login = isset($_SESSION['google_login']) && $_SESSION['google_login']
                         <div class="col-md-6">
                             <label for="nationality" class="form-label">Nationality</label>
                             <input type="text" class="form-control" id="nationality" name="nationality" value="<?php echo $user_data['nationality']; ?>">
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <label for="dob" class="form-label">Date of Birth</label>
-                            <input type="date" class="form-control" id="dob" name="dob" value="<?php echo $user_data['dob']; ?>" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select" id="gender" name="gender">
-                                <option value="Male" <?php if ($user_data['gender'] == 'Male') echo 'selected'; ?>>Male</option>
-                                <option value="Female" <?php if ($user_data['gender'] == 'Female') echo 'selected'; ?>>Female</option>
-                                <option value="Other" <?php if ($user_data['gender'] == 'Other') echo 'selected'; ?>>Other</option>
-                            </select>
                         </div>
                     </div>
 

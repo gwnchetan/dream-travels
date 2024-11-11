@@ -43,27 +43,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: loginpage.php?error=" . urlencode($errorMessage));
         exit();
     } else {
-        $stmt = $conn->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
+        // First prepare statement to fetch user data
+        $stmt = $pdo->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
+        $stmt->execute([$email]);
 
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($userId, $dbEmail, $hashedPassword, $fname, $lname);
-            $stmt->fetch();
+        if ($stmt->rowCount() > 0) {
+            $user = $stmt->fetch();
 
-            if (password_verify($password, $hashedPassword)) {
-                $_SESSION['user_id'] = $userId;
-                $_SESSION['email'] = $dbEmail;
-                $_SESSION['fname'] = $fname;
-                $_SESSION['lname'] = $lname;
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['fname'] = $user['fname'];
+                $_SESSION['lname'] = $user['lname'];
                 $_SESSION['logged_in'] = true;
-                $_SESSION['auth_provider'] = 'Email/Password'; // New for consistency with Google login
+                $_SESSION['auth_provider'] = 'Email/Password';
 
-                $stmt = $conn->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
+                // Log user activity
                 $loginMethod = 'Email/Password';
-                $stmt->bind_param("isss", $userId, $ipAddress, $deviceInfo, $loginMethod);
-                $stmt->execute();
+                $activityStmt = $pdo->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
+                $activityStmt->execute([$user['id'], $ipAddress, $deviceInfo, $loginMethod]);
 
                 header("Location: ../index.php");
                 exit();

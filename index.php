@@ -1,20 +1,18 @@
 <?php
 session_start();
 
-// Check if the user is logged in (either through Google or a traditional login)
+// Check if the user is logged in (whether through Google or traditional login)
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+$profilePicture = './imgs/client-2.jpg';
 
-// Determine login type and set the profile image
-if (isset($_SESSION['google_logged_in']) && $_SESSION['google_logged_in'] === true) {
-    $isLoggedIn = true;
-    $profilePicture = $_SESSION['profile_picture']; // Google profile picture
+// Set profile information based on session data if logged in
+if ($isLoggedIn) {
+    $profilePicture = isset($_SESSION['profile_picture']) ? $_SESSION['profile_picture'] : $profilePicture;
+    $userFullName = $_SESSION['fname'] . ' ' . $_SESSION['lname'];
+    $userEmail = $_SESSION['email'];
 } else {
-    $profilePicture = './imgs/default-profile.png'; // Default profile image for traditional login
+    $userFullName = $userEmail = null;
 }
-
-// Combine first and last name for full name display
-$userFullName = $isLoggedIn ? ($_SESSION['fname'] . ' ' . $_SESSION['lname']) : null;
-$userEmail = $isLoggedIn ? $_SESSION['email'] : null;
 
 ?>
 <!DOCTYPE html>
@@ -60,7 +58,6 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
         </div>
     </nav>
 </div>
-
     <header class="section__container header__container">
       <div class="header__image__container">
         <div class="header__content">
@@ -245,9 +242,10 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
   </body>
 
 <script>
- document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.querySelector('#profile');
     const profileBox = document.querySelector('#profile_box');
+    const loginButton = document.querySelector('#login_btn');
 
     // Toggle profile box visibility on profile icon click
     profileIcon.addEventListener('click', function (event) {
@@ -261,7 +259,14 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
             profileBox.style.display = 'none';
         }
     });
+
+    // Show login button and hide profile icon after logout
+    document.querySelector('#logout').addEventListener('click', function() {
+        // Clear sessions and update UI for logout
+        profileIcon.style.display = 'none';
+        loginButton.style.display = 'block';
+    });
 });
 </script>
-</>
-</>
+</body>
+</html>

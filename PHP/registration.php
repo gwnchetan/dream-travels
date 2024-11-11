@@ -5,49 +5,61 @@ require_once './config.php';
 $errorMessages = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $fname = mysqli_real_escape_string($conn, $_POST['fname']);
-    $lname = mysqli_real_escape_string($conn, $_POST['lname']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
+    $email = $_POST['email'];
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    $query = "SELECT * FROM user WHERE email = '$email'";
-    $result = mysqli_query($conn, $query);
+    try {
+        // Check if the email is already in use
+        $query = "SELECT * FROM user WHERE email = :email";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
 
-    if (mysqli_num_rows($result) > 0) {
-        $errorMessages[] = "Email already in use.";
-    }
+        if ($stmt->rowCount() > 0) {
+            $errorMessages[] = "Email already in use.";
+        }
 
-    if ($password !== $confirm_password) {
-        $errorMessages[] = "Passwords do not match.";
-    }
+        // Check if passwords match
+        if ($password !== $confirm_password) {
+            $errorMessages[] = "Passwords do not match.";
+        }
 
-    if (empty($errorMessages)) {
-        try {
+        if (empty($errorMessages)) {
+            // Hash the password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $insertPerson = "INSERT INTO person (fname, lname, email) VALUES ('$fname', '$lname', '$email')";
-            if (!mysqli_query($conn, $insertPerson)) {
-                throw new Exception("Failed to insert into person table.");
-            }
+            // Start a transaction
+            $pdo->beginTransaction();
 
-            $insertUser = "INSERT INTO user (email, password) VALUES ('$email', '$hashedPassword')";
-            if (!mysqli_query($conn, $insertUser)) {
-                throw new Exception("Failed to insert into user table.");
-            }
+            // Insert into person table
+            $insertPerson = "INSERT INTO person (fname, lname, email) VALUES (:fname, :lname, :email)";
+            $stmtPerson = $pdo->prepare($insertPerson);
+            $stmtPerson->execute(['fname' => $fname, 'lname' => $lname, 'email' => $email]);
 
-            header("Location: ../loginpage.php?success=Account created successfully. You can now log in.");
+            // Insert into user table
+            $insertUser = "INSERT INTO user (email, password) VALUES (:email, :password)";
+            $stmtUser = $pdo->prepare($insertUser);
+            $stmtUser->execute(['email' => $email, 'password' => $hashedPassword]);
+
+            // Commit the transaction
+            $pdo->commit();
+
+            header("Location: ../loginpage.php?success=" . urlencode("Account created successfully. You can now log in."));
             exit();
-
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-
-            $errorMessages[] = "Failed to create account. Please try again.";
+        } else {
+            // If there are validation errors, redirect back with error messages
             $errorString = implode(", ", $errorMessages);
             header("Location: ../loginpage.php?error=" . urlencode($errorString));
             exit();
         }
-    } else {
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $pdo->rollBack();
+        error_log($e->getMessage());
+        
+        $errorMessages[] = "Failed to create account. Please try again.";
         $errorString = implode(", ", $errorMessages);
         header("Location: ../loginpage.php?error=" . urlencode($errorString));
         exit();
