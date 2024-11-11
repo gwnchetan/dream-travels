@@ -111,3 +111,44 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+
+// // Initialize Google Login
+// window.onload = function () {
+//     google.accounts.id.initialize({
+//         client_id: '801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com', // Replace with your actual client ID
+//         callback: handleCredentialResponse
+//     });
+//     google.accounts.id.renderButton(
+//         document.getElementById("googleLoginButton"),
+//         { theme: "text", size: "xlarge" } // Set theme to "text" for default styling
+//     );
+// };
+
+// // Handle the response after Google login
+// function handleCredentialResponse(response) {
+//     // Send the ID token to your server for verification
+//     const idToken = response.credential;
+
+//     fetch('../PHP/google_callback.php', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//         body: `id_token=${encodeURIComponent(idToken)}`
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             // Redirect to the home page if login is successful
+//             window.location.href = './index.php';
+//         } else {
+//             alert('Login failed: ' + data.message);
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         alert('An error occurred during login.');
+//     });
+// }
+
