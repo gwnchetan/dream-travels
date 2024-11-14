@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Check if the user is logged in (whether through Google or traditional login)
+// Check if the user is logged in (either through Google or traditional login)
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 $profilePicture = './imgs/client-2.jpg';
 
@@ -14,17 +14,20 @@ if ($isLoggedIn) {
     $userFullName = $userEmail = null;
 }
 
+
+
 ?>
 <!DOCTYPE html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="CSS\hotel.css" />
+    <link rel="stylesheet" href="CSS/hotel.css" />
     <title>Hotel</title>
-  </head>
-  <body>
-  <div id="wrap">
+</head>
+<body>
+<div id="wrap">
     <nav>
         <div class="nav__logo"><h3>Dreams Travelers</h3></div>
         <div id="option">
@@ -42,22 +45,23 @@ if ($isLoggedIn) {
 
             <!-- Profile box -->
             <div id="profile_box" style="display: none;">
+              <div id="profile_border">
                 <div class="profile-info">
                     <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture" class="profile-pic">
                     <p class="profile-name"><?php echo htmlspecialchars($userFullName); ?></p>
-                    <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
                 </div>
+                <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
+                <hr> 
                 <ul class="profile-menu">
-                    <li><a href="./bookings.php"><i class="ri-bookmark-line"></i> My Bookings</a></li>
-                    <li><a href="./wishlist.php"><i class="ri-heart-line"></i> My Wishlist</a></li>
                     <li><a href="./profilepage.php"><i class="ri-settings-line"></i> Settings</a></li>
-                    <li><a href="./help.php"><i class="ri-question-line"></i> Help Center</a></li>
                     <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
                 </ul>
+                </div>
             </div>
         </div>
     </nav>
 </div>
+
     <header class="section__container header__container">
       <div class="header__image__container">
         <div class="header__content">
@@ -240,33 +244,32 @@ if ($isLoggedIn) {
       </div>
      </footer>
   </body>
+  <script>
+  function toggleProfileBox() {
+      const profileBox = document.getElementById('profile_box');
+      profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
+  }
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const profileIcon = document.querySelector('#profile');
-    const profileBox = document.querySelector('#profile_box');
-    const loginButton = document.querySelector('#login_btn');
+  // This function will hide/show profile or login based on the login status
+  function displayUserOptions() {
+      const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+      const profileIcon = document.getElementById('profile');
+      const loginButton = document.getElementById('login_btn');
 
-    // Toggle profile box visibility on profile icon click
-    profileIcon.addEventListener('click', function (event) {
-        event.stopPropagation();  // Prevents the event from propagating to document click
-        profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
-    });
+      if (isLoggedIn) {
+          profileIcon.style.display = 'block';
+          loginButton.style.display = 'none';
+          console.log("User is logged in");
+      } else {
+          profileIcon.style.display = 'none';
+          loginButton.style.display = 'block';
+          console.log("User is logged out");
+      }
+  }
 
-    // Close profile box if clicked outside of it
-    document.addEventListener('click', function (event) {
-        if (!profileIcon.contains(event.target) && !profileBox.contains(event.target)) {
-            profileBox.style.display = 'none';
-        }
-    });
-
-    // Show login button and hide profile icon after logout
-    document.querySelector('#logout').addEventListener('click', function() {
-        // Clear sessions and update UI for logout
-        profileIcon.style.display = 'none';
-        loginButton.style.display = 'block';
-    });
-});
+  // Call the function on page load
+  window.onload = displayUserOptions;
 </script>
+
 </body>
 </html>

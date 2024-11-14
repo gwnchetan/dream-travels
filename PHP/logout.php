@@ -1,76 +1,60 @@
 <?php
 session_start();
-require_once './config.php';
+require_once './config.php'; // Database connection
+
+// Set timezone to Asia/Kolkata (Indian Time Zone)
 date_default_timezone_set('Asia/Kolkata');
 
-// Function to revoke Google token if it exists in the session
-function revokeGoogleToken($token) {
-    $url = 'https://accounts.google.com/o/oauth2/revoke?token=' . $token;
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_exec($ch);
-    curl_close($ch);
-}
+// Ensure that the database connection variable is available
+global $pdo;
 
-if (isset($_SESSION['user_id']) || isset($_SESSION['google_access_token'])) {
-    // Check if it's a traditional login
+// Check if the user is logged in
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    // Ensure user_id is set in the session
     if (isset($_SESSION['user_id'])) {
-        $userId = $_SESSION['user_id'];
+        // Capture the logout time and calculate session duration
         $logoutTime = date('Y-m-d H:i:s');
+        $loginTime = isset($_SESSION['login_time']) ? $_SESSION['login_time'] : $logoutTime;
+        $sessionDuration = strtotime($logoutTime) - strtotime($loginTime); // in seconds
 
-        // Ensure connection is established with PDO
-        if (!$pdo) {
-            die("Database connection failed.");
-        }
+        // Optional data (replace with actual values if available)
+        $geolocation = isset($_SESSION['geolocation']) ? $_SESSION['geolocation'] : null;
+        $pagesVisited = isset($_SESSION['pages_visited']) ? $_SESSION['pages_visited'] : null;
+        $actions = isset($_SESSION['actions']) ? $_SESSION['actions'] : null;
 
-        // Prepare the update statement for logout time and session duration
-        $stmt = $pdo->prepare("UPDATE user_activity SET logout_time = ?, session_duration = TIMESTAMPDIFF(SECOND, login_time, ?) WHERE user_id = ? AND logout_time IS NULL");
-
-        if ($stmt) {
-            // Execute the statement with parameters
-            if (!$stmt->execute([$logoutTime, $logoutTime, $userId])) {
-                error_log("Statement execution failed: " . implode(", ", $stmt->errorInfo()));
-            }
-
-            if ($stmt->rowCount() === 0) {
-                error_log("Logout update failed for user_id: $userId");
-            }
-        } else {
-            error_log("Statement preparation failed.");
-        }
+        // Update user activity in the `user_activity` table
+        $stmt = $pdo->prepare("UPDATE user_activity 
+                               SET logout_time = ?, session_duration = ?, geolocation = ?, 
+                                   pages_visited = ?, actions = ? 
+                               WHERE user_id = ? 
+                               ORDER BY activity_id DESC
+                               LIMIT 1");
+        $stmt->execute([$logoutTime, $sessionDuration, $geolocation, $pagesVisited, $actions, $_SESSION['user_id']]);
     }
 
-    // If logged in with Google, revoke token
-    if (isset($_SESSION['google_access_token'])) {
-        revokeGoogleToken($_SESSION['google_access_token']);
-    }
-
-    // Clear session data
+    // Clear all session variables related to login
     $_SESSION = [];
+    session_unset();
 
-    // Destroy session cookie if set
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
-        );
-    }
-
-    // Destroy the session
+    // Destroy the session to ensure complete logout
     session_destroy();
 
-    // Redirect to index.php
-    if (!headers_sent()) {
-        header("Location: ../index.php");
-        exit();
-    } else {
-        echo "<script>window.location.href='../index.php';</script>";
+    // Check if Google login is used, and clear Google-specific cookies or tokens
+    if (isset($_COOKIE['google_auth'])) {
+        setcookie('google_auth', '', time() - 3600, '/'); // Clear Google auth cookie
+    }
+
+    // If using Google OAuth API, include additional logout steps
+    if (isset($_SESSION['google_token'])) {
+        unset($_SESSION['google_token']); // Clear any Google session tokens
+        // Redirect to Google logout URL to fully log out of Google if needed
+        $googleLogoutUrl = "https://accounts.google.com/Logout"; 
+        header("Location: $googleLogoutUrl"); // Optional Google logout
         exit();
     }
-} else {
-    // If no user is logged in, redirect directly
-    header("Location: ../index.php");
-    exit();
 }
+
+// Redirect to the home page after logout
+header("Location: ../index.php");
+exit();
 ?>

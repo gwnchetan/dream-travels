@@ -142,7 +142,7 @@ input[type="text"] {
 .login-btn, .social-login {
     width: 100%;
     padding: 10px;
-    background-color: #6200ea;
+    background-color: #3d0091;
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -156,10 +156,12 @@ input[type="text"] {
     justify-content: center;
 }
 
-.login-btn:hover {
-    background-color: #4a00b4;
+.social-login:hover {
+    background-color: #4b00b4a4;
 }
-
+.login-btn:hover{    
+    background-color: #4b00b4a4;
+} 
 .divider {
     margin: 20px 0;
     position: relative;

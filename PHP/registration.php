@@ -4,6 +4,8 @@ require_once './config.php';
 
 $errorMessages = [];
 
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $fname = $_POST['fname'];
@@ -25,6 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($password !== $confirm_password) {
             $errorMessages[] = "Passwords do not match.";
         }
+
+        
 
         if (empty($errorMessages)) {
             // Hash the password

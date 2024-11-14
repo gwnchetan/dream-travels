@@ -77,14 +77,14 @@ function getUserIpAddress() {
                 <input type="hidden" id="ipAddress" name="ipAddress">
                 <input type="hidden" id="deviceInfo" name="deviceInfo">
 
-                <button type="submit" class="login-btn btn btn-primary">Login</button>
+                <button type="submit" class="login-btn">Login</button>
             </form>
 
             <div class="divider">
                 <span> Or sign in with </span>
             </div>
          
-            <button onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?client_id=801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com&redirect_uri=http://localhost/bookings/PHP/call_back.php&response_type=code&scope=openid%20email%20profile'">
+            <button onclick="location.href='https://accounts.google.com/o/oauth2/v2/auth?client_id=801533048919-jtbtlnmq82adqkmvs1v4etd3apvas3il.apps.googleusercontent.com&redirect_uri=http://localhost/bookings/PHP/call_back.php&response_type=code&scope=openid%20email%20profile'" class="social-login">
                 <img src="./imgs/google.svg" alt="Login with Google"> Continue with Google
             </button>
         
@@ -110,9 +110,9 @@ function getUserIpAddress() {
                     <button type="button" class="show-password"><i class="ri-eye-fill"></i></button>
                 </div>
 
-                <label for="confirm_password">Confirm password</label>
+                <label for="confirm_password">Confirm password</label required>
                 <div class="password-container">
-                    <input type="password" name="confirm_password" required>
+                    <input type="password" name="confirm_password" >
                     <button type="button" class="show-password"><i class="ri-eye-fill"></i></button>
                 </div>
 
@@ -121,5 +121,6 @@ function getUserIpAddress() {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="./js/login.js"></script>
+    
 </body>
 </html>

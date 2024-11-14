@@ -13,7 +13,6 @@ $user_email = $_SESSION['email'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $full_name = $_POST['full_name'];
     $contact_number = $_POST['contact_number'] ?? null;
-    $nationality = $_POST['nationality'] ?? null;
     $dob = $_POST['dob'] ?? null;
     $gender = $_POST['gender'] ?? null;
     $street_address = $_POST['street_address'] ?? null;
@@ -41,13 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Update user data in the database
-    $query = "UPDATE person SET fname = :fname, lname = :lname, contact_number = :contact_number, nationality = :nationality, dob = :dob, gender = :gender, street_address = :street_address, city = :city, state = :state, postal_code = :postal_code, country = :country, profile_picture = :profile_picture WHERE email = :email";
+    $query = "UPDATE person SET fname = :fname, lname = :lname, contact_number = :contact_number, dob = :dob, gender = :gender, street_address = :street_address, city = :city, state = :state, postal_code = :postal_code, country = :country, profile_picture = :profile_picture WHERE email = :email";
     $stmt = $pdo->prepare($query);
     $params = [
         'fname' => $fname,
         'lname' => $lname,
         'contact_number' => $contact_number,
-        'nationality' => $nationality,
         'dob' => $dob,
         'gender' => $gender,
         'street_address' => $street_address,
