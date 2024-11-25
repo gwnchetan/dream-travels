@@ -219,7 +219,7 @@ hr{
 .header__content p {
   color: var(--extra-light);
 }
-
+/* Booking Container Styles */
 .booking__container {
   position: absolute;
   bottom: -5rem;
@@ -229,9 +229,9 @@ hr{
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 3rem 2rem;
-  border-radius: 2rem;
-  background-color: rgba(255, 255, 255, 0.7);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.9);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
@@ -242,59 +242,51 @@ hr{
   flex: 1;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
-.booking__container .input__group {
+.booking__container .form__group {
   width: 100%;
-  position: relative;
 }
 
 .booking__container label {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
   color: var(--text-dark);
-  pointer-events: none;
-  transition: 0.3s;
-
 }
 
 .booking__container input {
   width: 100%;
-  padding: 10px 0;
+  padding: 0.8rem;
   font-size: 1rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.5rem;
   outline: none;
-  border: none;
-  background-color: transparent;
-  border-bottom: 1px solid var(--primary-color);
   color: var(--text-dark);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
-.booking__container input:focus ~ label {
-  font-size: 0.8rem;
-  top: 0;
-}
-
-.booking__container .form__group p {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
+.booking__container input::placeholder {
   color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.booking__container input:focus {
+  border-color: var(--primary-color-dark);
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .booking__container .btn {
   padding: 1rem;
-  outline: none;
-  border: none;
   font-size: 1.5rem;
   color: var(--white);
   background-color: var(--primary-color);
-  border-radius: 100%;
+  border-radius: 13px;
   cursor: pointer;
-  transition: 0.3s;
+  border: none;
+
 }
 
 .booking__container .btn:hover {

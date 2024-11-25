@@ -61,7 +61,7 @@ function getUserIpAddress() {
 
                 <label for="password">Enter password</label>
                 <div class="password-container">
-                    <input type="password" name="password" id="password" placeholder="••••••••" required>
+                    <input type="password" name="password" id="password" placeholder="••••••••" >
                     <button type="button" class="show-password"><i class="ri-eye-fill"></i></button>
                 </div>
 

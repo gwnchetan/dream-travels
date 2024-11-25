@@ -43,27 +43,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: loginpage.php?error=" . urlencode($errorMessage));
         exit();
     } else {
-        // First prepare statement to fetch user data
-        $stmt = $pdo->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
+        // Check if the email exists in the admin table
+        $stmt = $pdo->prepare("SELECT * FROM admin WHERE email = ?");
         $stmt->execute([$email]);
 
         if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch();
+            // Admin found
+            $admin = $stmt->fetch();
 
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['fname'] = $user['fname'];
-                $_SESSION['lname'] = $user['lname'];
+            if (password_verify($password, $admin['password'])) {
+                // Set session for admin
+                $_SESSION['admin_id'] = $admin['admin_id'];
+                $_SESSION['email'] = $admin['email'];
+                $_SESSION['name'] = $admin['name'];
                 $_SESSION['logged_in'] = true;
-                $_SESSION['auth_provider'] = 'Email/Password';
+                $_SESSION['role'] = 'Admin';
 
-                // Log user activity
+                // Log admin activity
                 $loginMethod = 'Email/Password';
                 $activityStmt = $pdo->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
-                $activityStmt->execute([$user['id'], $ipAddress, $deviceInfo, $loginMethod]);
+                $activityStmt->execute([$admin['admin_id'], $ipAddress, $deviceInfo, $loginMethod]);
 
-                header("Location: ../index.php");
+                header("Location: ../admin_dashboard.php");
                 exit();
             } else {
                 $errorMessage = 'Incorrect password.';
@@ -71,9 +72,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         } else {
-            $errorMessage = 'No account found with this email.';
-            header("Location: ../loginpage.php?error=" . urlencode($errorMessage));
-            exit();
+            // If not in admin table, check in user table
+            $stmt = $pdo->prepare("SELECT u.id, u.email, u.password, p.fname, p.lname FROM user u JOIN person p ON u.email = p.email WHERE u.email = ?");
+            $stmt->execute([$email]);
+
+            if ($stmt->rowCount() > 0) {
+                $user = $stmt->fetch();
+
+                if (password_verify($password, $user['password'])) {
+                    // Set session for normal user
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['fname'] = $user['fname'];
+                    $_SESSION['lname'] = $user['lname'];
+                    $_SESSION['logged_in'] = true;
+                    $_SESSION['role'] = 'User';
+
+                    // Log user activity
+                    $loginMethod = 'Email/Password';
+                    $activityStmt = $pdo->prepare("INSERT INTO user_activity (user_id, ip_address, device_info, login_method) VALUES (?, ?, ?, ?)");
+                    $activityStmt->execute([$user['id'], $ipAddress, $deviceInfo, $loginMethod]);
+
+                    header("Location: ../index.php");
+                    exit();
+                } else {
+                    $errorMessage = 'Incorrect password.';
+                    header("Location: ../loginpage.php?error=" . urlencode($errorMessage));
+                    exit();
+                }
+            } else {
+                $errorMessage = 'No account found with this email.';
+                header("Location: ../loginpage.php?error=" . urlencode($errorMessage));
+                exit();
+            }
         }
     }
 }

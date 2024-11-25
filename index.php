@@ -1,6 +1,20 @@
 <?php
 session_start();
 
+// Database connection using PDO
+try {
+    $dsn = 'mysql:host=localhost;dbname=booking_system;charset=utf8mb4';
+    $username = 'root';
+    $password = '';
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ];
+    $pdo = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
 // Check if the user is logged in (either through Google or traditional login)
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 $profilePicture = './imgs/client-2.jpg';
@@ -14,8 +28,9 @@ if ($isLoggedIn) {
     $userFullName = $userEmail = null;
 }
 
-
-
+// Fetch hotel data from the database
+$stmt = $pdo->query("SELECT * FROM hotels LIMIT 6"); // Fetch 6 hotels as an example
+$hotels = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,152 +77,94 @@ if ($isLoggedIn) {
     </nav>
 </div>
 
-    <header class="section__container header__container">
-      <div class="header__image__container">
-        <div class="header__content">
-          <h1>Enjoy Your Dream Vacation</h1>
-          <p>Book Hotels, Flights and stay packages at lowest price.</p>
-        </div>
-        <div class="booking__container">
-          <form>
-            <div class="form__group">
-              <div class="input__group">
-                <input type="text" />
+<header class="section__container header__container">
+  <div class="header__image__container">
+    <div class="header__content">
+      <h1>Enjoy Your Dream Vacation</h1>
+      <p>Book Hotels, Flights and stay packages at lowest price.</p>
+    </div>
+    <div class="booking__container">
+    <form action="booking_page.php" method="POST">
+        <div class="form__group">
+            <div class="input__group">
+                <input type="text" name="location" required />
                 <label>Location</label>
-              </div>
-              <p>Where are you going?</p>
             </div>
-            <div class="form__group">
-              <div class="input__group">
-                <input type="date" placeholder="Check In"/>
-                <label></label>
-              </div>
-              <p>Add date</p>
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="date" name="check_in" required />
+                <label>Check In</label>
             </div>
-            <div class="form__group">
-              <div class="input__group">
-                <input type="date" placeholder="Check Out" />
-                <label></label>
-              </div>
-              <p>Add date</p>
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="date" name="check_out" required />
+                <label>Check Out</label>
             </div>
-            <div class="form__group">
-              <div class="input__group">
-                <input type="text" />
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="number" name="guests" required min="1" />
                 <label>Guests</label>
-              </div>
-              <p>Add guests</p>
             </div>
-          </form>
-          <button class="btn"><i class="ri-search-line"></i></button>
         </div>
-      </div>
-    </header>
+        <button type="submit" class="btn"><i class="ri-search-line"></i> Find Hotels</button>
+    </form>
+</div>
 
-    <section class="section__container popular__container">
-      <h2 class="section__header">Popular Hotels</h2>
-      <div class="popular__grid">
-        <div class="popular__card">
-          <img src="./imgs/hotel-1.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>The Plaza Hotel</h4>
-              <h4>$499</h4>
-            </div>
-            <p>New York City, USA</p>
-          </div>
-        </div>
-        <div class="popular__card">
-          <img src="./imgs/hotel-2.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>Ritz Paris</h4>
-              <h4>$549</h4>
-            </div>
-            <p>Paris, France</p>
-          </div>
-        </div>
-        <div class="popular__card">
-          <img src="./imgs/hotel-3.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>The Peninsula</h4>
-              <h4>$599</h4>
-            </div>
-            <p>Hong Kong</p>
-          </div>
-        </div>
-        <div class="popular__card">
-          <img src="./imgs/hotel-4.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>Atlantis The Palm</h4>
-              <h4>$449</h4>
-            </div>
-            <p>Dubai, United Arab Emirates</p>
-          </div>
-        </div>
-        <div class="popular__card">
-          <img src="./imgs/hotel-5.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>The Ritz-Carlton</h4>
-              <h4>$649</h4>
-            </div>
-            <p>Tokyo, Japan</p>
-          </div>
-        </div>
-        <div class="popular__card">
-          <img src=" ./imgs/hotel-6.jpg" alt="popular hotel" />
-          <div class="popular__content">
-            <div class="popular__card__header">
-              <h4>Marina Bay Sands</h4>
-              <h4>$549</h4>
-            </div>
-            <p>Singapore</p>
-          </div>
-        </div>
-      </div>
-    </section>
+  </div>
+</header>
 
-    <section class="client">
-      <div class="section__container client__container">
-        <h2 class="section__header">What our client say</h2>
-        <div class="client__grid">
-          <div class="client__card">
-            <img src="./imgs/client-1.jpg" alt="client" />
-            <p>
-              The booking process was seamless, and the confirmation was
-              instant. I highly recommend WDM&Co for hassle-free hotel bookings.
-            </p>
-          </div>
-          <div class="client__card">
-            <img src="./imgs/client-2.jpg" alt="client" />
-            <p>
-              The website provided detailed information about hotel, including
-              amenities, photos, which helped me make an informed decision.
-            </p>
-          </div>
-          <div class="client__card">
-            <img src="./imgs/client-3.jpg" alt="client" />
-            <p>
-              I was able to book a room within minutes, and the hotel exceeded
-              my expectations. I appreciate WDM&Co's efficiency and reliability.
-            </p>
-          </div>
+<section class="section__container popular__container">
+  <h2 class="section__header">Popular Hotels</h2>
+  <div class="popular__grid">
+    <?php foreach ($hotels as $hotel): ?>
+        <div class="popular__card">
+            <img src="<?php echo htmlspecialchars($hotel['image_url']); ?>" alt="Hotel Image" />
+            <div class="popular__content">
+                <div class="popular__card__header">
+                    <h4><?php echo htmlspecialchars($hotel['name']); ?></h4>
+                    <h4>$<?php echo htmlspecialchars(number_format($hotel['rating'], 1)); ?></h4>
+                </div>
+                <p><?php echo htmlspecialchars($hotel['location']); ?></p>
+            </div>
         </div>
-      </div>
-    </section>
+    <?php endforeach; ?>
+  </div>
+</section>
 
-    <section class="section__container">
-      <div class="reward__container">
-        <p>100+ discount codes</p>
-        <h4>Join rewards and discover amazing discounts on your booking</h4>
-        <button class="reward__btn">Join Rewards</button>
+<section class="client">
+  <div class="section__container client__container">
+    <h2 class="section__header">What our client say</h2>
+    <div class="client__grid">
+      <div class="client__card">
+        <img src="./imgs/client-1.jpg" alt="client" />
+        <p>
+          The booking process was seamless, and the confirmation was
+          instant. I highly recommend WDM&Co for hassle-free hotel bookings.
+        </p>
       </div>
-    </section>
+      <div class="client__card">
+        <img src="./imgs/client-2.jpg" alt="client" />
+        <p>
+          The website provided detailed information about hotel, including
+          amenities, photos, which helped me make an informed decision.
+        </p>
+      </div>
+      <div class="client__card">
+        <img src="./imgs/client-3.jpg" alt="client" />
+        <p>
+          I was able to book a room within minutes, and the hotel exceeded
+          my expectations. I appreciate WDM&Co's efficiency and reliability.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer class="footer">
+
+<footer class="footer">
       <div class="section__container footer__container">
         <div class="footer__col">
           <h3></h3>
@@ -243,33 +200,27 @@ if ($isLoggedIn) {
         </div>
       </div>
      </footer>
-  </body>
-  <script>
-  function toggleProfileBox() {
-      const profileBox = document.getElementById('profile_box');
-      profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
-  }
+<script>
+function toggleProfileBox() {
+    const profileBox = document.getElementById('profile_box');
+    profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
+}
 
-  // This function will hide/show profile or login based on the login status
-  function displayUserOptions() {
-      const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
-      const profileIcon = document.getElementById('profile');
-      const loginButton = document.getElementById('login_btn');
+function displayUserOptions() {
+    const isLoggedIn = <?php echo json_encode($isLoggedIn); ?>;
+    const profileIcon = document.getElementById('profile');
+    const loginButton = document.getElementById('login_btn');
 
-      if (isLoggedIn) {
-          profileIcon.style.display = 'block';
-          loginButton.style.display = 'none';
-          console.log("User is logged in");
-      } else {
-          profileIcon.style.display = 'none';
-          loginButton.style.display = 'block';
-          console.log("User is logged out");
-      }
-  }
+    if (isLoggedIn) {
+        profileIcon.style.display = 'block';
+        loginButton.style.display = 'none';
+    } else {
+        profileIcon.style.display = 'none';
+        loginButton.style.display = 'block';
+    }
+}
 
-  // Call the function on page load
-  window.onload = displayUserOptions;
+window.onload = displayUserOptions;
 </script>
-
 </body>
 </html>
