@@ -235,6 +235,7 @@ hr{
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 35px;
 }
 
 .booking__container form {
@@ -307,6 +308,12 @@ hr{
 }
 .popular__card:hover{
   box-shadow: 5px 5px 10px var(--primary-color-dark);
+}
+.popular__card img {
+  width: 100%; /* Ensures the image fills the card's width */
+  height: 200px; /* Set a fixed height for consistency */
+  object-fit: cover; /* Crops and scales the image to maintain aspect ratio */
+  border-radius: 1rem 1rem 0 0; /* Ensures the top corners match the card */
 }
 
 .popular__content {

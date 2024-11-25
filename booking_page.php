@@ -1,8 +1,14 @@
- <?php
+<?php
 session_start();
+require_once "./PHP/config.php";
 
-require_once './php/config.php';
-// Check if the user is logged in (either through Google or traditional login)
+// Get search parameters from the URL
+$location = isset($_GET['location']) ? $_GET['location'] : '';
+$check_in = isset($_GET['check_in']) ? $_GET['check_in'] : '';
+$check_out = isset($_GET['check_out']) ? $_GET['check_out'] : '';
+$guests = isset($_GET['guests']) ? $_GET['guests'] : 1;  // Default to 1 guest if not provided
+
+// Check if the user is logged in
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
 $profilePicture = './imgs/client-2.jpg';
 
@@ -15,10 +21,7 @@ if ($isLoggedIn) {
     $userFullName = $userEmail = null;
 }
 
-// Fetch hotel data from the database
-$stmt = $pdo->query("SELECT * FROM hotels LIMIT 6"); // Fetch 6 hotels as an example
-$hotels = $stmt->fetchAll();
-?> 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -65,70 +68,43 @@ $hotels = $stmt->fetchAll();
         </div>
     </nav>
 </div>
-
 <header class="section__container header__container">
-    <div class="header__image__container">
-        <div class="header__content">
-            <h1>Enjoy Your Dream Vacation</h1>
-            <p>Book Hotels, Flights and stay packages at lowest price.</p>
-        </div>
-        <div class="booking_container">
-            <form action="booking_page.php" method="POST">
-                <div class="search-container">
-                <div class="search-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <label for="location">enter location</label>
-                <input type="text" name="location" placeholder="Select location" required>
-              </div>
-
-                    <!-- Check-in & Check-out Dates -->
-              <div class="search-item">
-                 <i class="fas fa-calendar-alt"></i>
-                 <label for="date">select date</label>
-                  <input type="text" name="dates" placeholder="Check-in - Check-out" required>
-                </div>
-
-                    <!-- Guests & Rooms -->
-                    <div class="search-item">
-                        <i class="fas fa-user"></i>
-                        <label for="room&guset">Rooms and gusts</label>
-                        <input type="text" id="guests-input" name="guests_rooms" placeholder="2 Adults 1 Room" readonly>
-                        <div class="dropdown">
-                            <div class="dropdown-item">
-                                <span>Adults</span>
-                                <div class="counter">
-                                    <button type="button" onclick="updateCounter('adults', -1)">-</button>
-                                    <span id="adults">2</span>
-                                    <button type="button" onclick="updateCounter('adults', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="dropdown-item">
-                                <span>Children</span>
-                                <div class="counter">
-                                    <button type="button" onclick="updateCounter('children', -1)">-</button>
-                                    <span id="children">0</span>
-                                    <button type="button" onclick="updateCounter('children', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="dropdown-item">
-                                <span>Rooms</span>
-                                <div class="counter">
-                                    <button type="button" onclick="updateCounter('rooms', -1)">-</button>
-                                    <span id="rooms">1</span>
-                                    <button type="button" onclick="updateCounter('rooms', 1)">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Search Button -->
-                    <button type="submit" class="search-btn">
-                        Search <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
+  <div class="header__image__container">
+    <div class="header__content">
+      <h1>Enjoy Your Dream Vacation</h1>
+      <p>Book Hotels, Flights and stay packages at the lowest price.</p>
     </div>
+    <div class="booking__container">
+    <form action="booking_page.php" method="POST">
+        <div class="form__group">
+            <div class="input__group">
+                <input type="text" name="location" id="search-location" autocomplete="off" />
+                <label>Location</label>
+                <ul id="suggestions" style="display: none;"></ul>
+            </div>
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="date" name="check_in" />
+                <label>Check In</label>
+            </div>
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="date" name="check_out" />
+                <label>Check Out</label>
+            </div>
+        </div>
+        <div class="form__group">
+            <div class="input__group">
+                <input type="number" name="guests" required min="1" />
+                <label>Guests</label>
+            </div>
+        </div>
+        <button type="submit" class="btn"><i class="ri-search-line"></i> Find Hotels</button>
+    </form>
+    </div>
+  </div>
 </header>
 
 <div class="container">

@@ -1,43 +1,30 @@
 <?php
 session_start();
-require_once './config.php';
+require_once "./PHP/config.php";
 
-// Capture Search Parameters
-$location = isset($_POST['location']) ? trim($_POST['location']) : '';
-$checkIn = isset($_POST['dates']) ? explode(' - ', $_POST['dates'])[0] : null;
-$checkOut = isset($_POST['dates']) ? explode(' - ', $_POST['dates'])[1] : null;
+// Get search parameters from the GET request
+$location = isset($_GET['location']) ? trim($_GET['location']) : '';
+$guests = isset($_GET['guests']) ? (int)$_GET['guests'] : 1;
 
-// Prepare Query
-$query = "SELECT DISTINCT h.*
-          FROM hotels h
-          LEFT JOIN rooms r ON h.id = r.hotel_id
-          LEFT JOIN bookings b ON r.id = b.room_id
-          WHERE h.location LIKE :location";
+// Prepare the query based on location
+$query = "SELECT * FROM hotels WHERE location LIKE :location";
+$params = ['location' => "%$location%"];
 
-// Append Date Filtering
-if ($checkIn && $checkOut) {
-    $query .= " AND (
-                (b.check_in IS NULL AND b.check_out IS NULL) OR
-                (:checkOut <= b.check_in OR :checkIn >= b.check_out)
-              )";
+try {
+    // Execute the query
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    $hotels = $stmt->fetchAll();
+
+    // Store the results in the session
+    $_SESSION['search_results'] = $hotels;
+
+    // Redirect to booking_page.php
+    header("Location: booking_page.php");
+    exit;
+} catch (PDOException $e) {
+    // Handle errors
+    $_SESSION['search_error'] = "Error fetching hotels: " . $e->getMessage();
+    header("Location: booking_page.php");
+    exit;
 }
-
-$query .= " LIMIT 6"; // Optional: Limit results
-
-// Execute Query
-$stmt = $pdo->prepare($query);
-$stmt->bindValue(':location', "%$location%", PDO::PARAM_STR);
-if ($checkIn && $checkOut) {
-    $stmt->bindValue(':checkIn', $checkIn, PDO::PARAM_STR);
-    $stmt->bindValue(':checkOut', $checkOut, PDO::PARAM_STR);
-}
-$stmt->execute();
-$hotels = $stmt->fetchAll();
-
-// Return Results
-if ($hotels) {
-    echo json_encode(['success' => true, 'data' => $hotels]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'No hotels found for your search criteria.']);
-}
-?>

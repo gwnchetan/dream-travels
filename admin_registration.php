@@ -32,15 +32,15 @@
                         <form action="./php/process_admin_registration.php" method="POST">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Full Name:</label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" >
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Address:</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" >
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password:</label>
-                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter a secure password" required>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter a secure password" >
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Register</button>
                         </form>
