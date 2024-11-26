@@ -167,10 +167,11 @@ body {
 }
 
 .hotel-card img {
-    width: 150px;
-    height: 150px;
+    width: 300px;
+    height: 250px;
     border-radius: 8px;
     object-fit: cover;
+
 }
 
 .hotel-details {
@@ -178,19 +179,19 @@ body {
 }
 
 .hotel-title {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
     color: var(--primary-color);
 }
 
 .hotel-location {
-    font-size: 14px;
+    font-size: 19px;
     color: var(--text-light);
     margin: 5px 0;
 }
 
 .hotel-amenities {
-    font-size: 14px;
+    font-size: 19px;
     color: var(--text-light);
     display: flex;
     gap: 10px;
@@ -198,7 +199,7 @@ body {
 }
 
 .hotel-price {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     color: var(--text-dark);
 }
