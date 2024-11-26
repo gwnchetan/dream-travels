@@ -109,12 +109,78 @@ $hotels = $stmt->fetchAll();
         <?php endforeach; ?>
     </div>
 </section>
+<section class="client">
+      <div class="section__container client__container">
+        <h2 class="section__header">What our client say</h2>
+        <div class="client__grid">
+          <div class="client__card">
+            <img src="./imgs/client-1.jpg" alt="client" />
+            <p>
+              The booking process was seamless, and the confirmation was
+              instant. I highly recommend WDM&Co for hassle-free hotel bookings.
+            </p>
+          </div>
+          <div class="client__card">
+            <img src="./imgs/client-2.jpg" alt="client" />
+            <p>
+              The website provided detailed information about hotel, including
+              amenities, photos, which helped me make an informed decision.
+            </p>
+          </div>
+          <div class="client__card">
+            <img src="./imgs/client-3.jpg" alt="client" />
+            <p>
+              I was able to book a room within minutes, and the hotel exceeded
+              my expectations. I appreciate WDM&Co's efficiency and reliability.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section class="section__container">
+      <div class="reward__container">
+        <p>100+ discount codes</p>
+        <h4>Join rewards and discover amazing discounts on your booking</h4>
+        <button class="reward__btn">Join Rewards</button>
+      </div>
+    </section>
 <footer class="footer">
-    <div class="section__container footer__container">
-        <p>&copy; 2024 Dreams Travelers. All Rights Reserved.</p>
-    </div>
-</footer>
+      <div class="section__container footer__container">
+        <div class="footer__col">
+          <h3></h3>
+          <p>
+            we are premier hotel booking website that offers a seamless and
+            convenient way to find and book accommodations worldwide.
+          </p>
+          <p>
+            With a user-friendly interface and a vast selection of hotels,
+            Dreams Travlers aims to provide a stress-free experience for travelers
+            seeking the perfect stay.
+          </p>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <p>About Us</p>
+          <p>Our Team</p>
+          <p>Blog</p>
+          <p>Book</p>
+          <p>Contact Us</p>
+        </div>
+        <div class="footer__col">
+          <h4>Legal</h4>
+          <p>FAQs</p>
+          <p>Terms & Conditions</p>
+          <p>Privacy Policy</p>
+        </div>
+        <div class="footer__col">
+          <h4>Resources</h4>
+          <p>Social Media</p>
+          <p>Help Center</p>
+          <p>Partnerships</p>
+        </div>
+      </div>
+     </footer>
 <script>
 function toggleProfileBox() {
     const profileBox = document.getElementById('profile_box');
