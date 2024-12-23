@@ -1,0 +1,544 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;0,800;1,600&display=swap');
+
+
+/* variables */
+
+
+:root {
+  --clr-primary: #7380ec;
+  --clr-danger: #ff7782;
+  --clr-success: #41f1b6;
+  --clr-white: #fff;
+  --clr-info-dark: #7d8da1;
+  --clr-info-light: #dce1eb;
+  --clr-dark: #363949;
+  --clr-warnig: #ff4edc;
+  --clr-light: rgba(132, 139, 200, 0.18);
+  --clr-primary-variant: #111e88;
+  --clr-dark-variant: #677483;
+  --clr-color-background: #f6f6f9;
+
+  --card-border-radius: 2rem;
+  --border-radius-1: 0.4rem;
+  --border-radius-2: 0.8rem;
+  --border-radius-3: 1.2rem;
+
+  --card-padding: 1.8rem;
+  --padding-1: 1.2rem;
+  --box-shadow: 0 2rem 3rem var(--clr-light);
+
+}
+
+/* dark theme */
+.dark-theme-variables {
+  --clr-color-background: #181a1e;
+  --clr-white: #202528;
+  --clr-light: rgba(0, 0, 0, 0.4);
+  --clr-dark: #edeffd;
+  --clr-dark-variant: #677483;
+  --box-shadow: 0 2rem 3rem var(--clr-light)
+}
+
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0;
+  text-decoration: none;
+  list-style: none;
+  appearance: none;
+}
+
+#deleteModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  background-color: white;
+  padding: 30px;
+  font-size: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: none; /* Hide the modal by default */
+  z-index: 1000; /* Ensure the modal is above other elements */
+  border-radius: 10px;
+  pointer-events: auto; /* Ensure the modal can be interacted with */
+}
+body.modal-open {
+  pointer-events: none; /* Disable pointer events on background */
+}
+
+body.modal-open #deleteModal, 
+body.modal-open #modalOverlay {
+    pointer-events: auto;
+}
+/* Modal Overlay */
+#modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: none; /* Initially hidden */
+  z-index: 999; /* Just below the modal */
+  pointer-events: auto; /* Ensure the overlay can be clicked to close the modal */
+}
+
+
+/* Modal Content */
+#deleteModal h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+#deleteModal p {
+  margin: 10px 0;
+}
+
+/* Buttons */
+#confirmDeleteBtn, button {
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#confirmDeleteBtn:hover, button:hover {
+  background-color: #0056b3;
+}
+
+/* Cancel button style */
+#deleteModal button {
+  background-color: #dc3545;
+}
+
+#deleteModal button:hover {
+  background-color: #c82333;
+}
+
+/* Modal Overlay */
+#modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: none; /* Initially hidden */
+  z-index: 999; /* Just below the modal */
+}
+
+
+body{
+   width: 100vw;
+   height: 100vh;
+   font-size: .7rem;
+   user-select: none;
+   overflow-x: hidden;
+   background: var(--clr-color-background);
+   font-family: 'Poppins', sans-serif;
+}
+ 
+#dashbord_page{
+  height: auto;
+  width: 100%;
+  display: block;
+
+}
+#hotels_page{
+  display: none;
+}
+.hotel_container{
+  width: 100%;
+  max-height: 800px; /* Adjust height as per your requirement */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem; /* Add some padding for aesthetics */
+  border: 1px solid #8478E8; /* Optional: Add a border for clarity */
+  background-color: #f9f9f9; /* Optional: Add a background color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 13px;
+  padding-right: 60px;
+}
+.container  {
+  display: flex;
+  width: 96%;
+  gap: 1.8rem;
+  margin: 0 auto;
+}
+#wrap_pro{
+  height: 100px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px;
+}
+#profile {
+  max-height: 70px;
+  max-width: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+#profile img{
+width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+/* aside */
+ aside{
+  height: 100vh;
+ }
+ aside .top{
+  background: var(--clr-white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.4rem;
+ }
+
+ aside .sidebar{
+  background: var(--clr-white);
+  display: flex;
+  flex-direction: column;
+  height: 86vh;
+  position: relative;
+  top: 1rem;
+ }
+
+ aside h3{
+  font-weight: 500;
+ }
+
+ aside .sidebar a{
+  display: flex;
+  color: var(--clr-info-dark);
+  margin-left: 2rem;
+  gap: 1rem;
+  align-items: center;
+  height: 3.3rem;
+  transition: all .1s ease;
+ 
+ }
+
+ aside .sidebar a span{
+  font-size: 1.6rem;
+  transition: all .3s ease-in-out;
+  
+ }
+
+ aside .sidebar a:last-child{
+  position: absolute;
+  bottom: 1rem; 
+  width: 100%;
+ }
+
+  aside .sidebar a:hover span{
+  margin-left: 1rem;
+ }
+
+
+
+
+ main{
+  margin-top: 1.4rem;
+  width: 100%;
+ }
+main .insights > div.expenses span{
+   background: var(--clr-danger);
+}
+main .insights > div.income span{
+  background: var(--clr-success);
+}
+
+main .insights > div .middle{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+main .insights > div .middle h1{
+  font-size: 1.6rem;
+}
+
+main h1{
+  color: var(--clr-dark);
+}
+main .insights h1{
+  color: var(--clr-dark);
+}
+main .insights h3{
+  color: var(--clr-dark);
+}
+main .insights p{
+  color: var(--clr-dark);
+}
+main .insights h3{
+  
+    color: var(--clr-dark);
+  
+  
+}
+
+main .insights svg{
+  height: 150px;
+  width: 150px;
+  position: absolute;
+  top: 0;
+}
+
+main .insights svg circle{
+  fill: none;
+  stroke: var(--clr-primary);
+   transform: rotate(270,80,80);
+   stroke-width: 5;
+}
+main .insights .sales svg circle{
+   stroke-dashoffset: 0;
+   stroke-dasharray: 150;
+}
+
+main .insights .expenses svg circle{
+  stroke-dashoffset: 10;
+  stroke-dasharray: 150;
+}
+main .insights .sales svg circle{
+  stroke-dashoffset: 0;
+  stroke-dasharray: 150;
+}
+main .insights .income svg circle{
+  stroke: var(--clr-success);
+}
+/* recent order */
+
+main .recent_order{
+   margin-top: 2rem;
+}
+
+main .recent_order h2{
+    color: var(--clr-dark);
+}
+
+main .recent_order h2{
+  margin-bottom: 0.8rem;
+}
+main .recent_order table{
+  background: var(--clr-white);
+  width: 100%;
+  border-radius: var(--card-border-radius);
+  padding: var(--card-padding);
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  transition: all .3s ease;
+  color: var(--clr-dark);
+}
+main .recent_order table:hover{
+  box-shadow: none;
+}
+
+main table tbody td{
+   height: 3.8rem;
+   border-bottom: 1px solid var(--clr-white);
+   color:var(--clr-dark-variant)
+}
+main table tbody tr:last-child td{
+   border: none;
+}
+
+
+main .recent_order a{
+  text-align: center;
+  display: block;
+  margin: 1rem;
+}
+.listing-card{
+  height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 30px;
+  border-radius: 13px;
+  background-color: #F4E4FF;
+}
+
+.listing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#imgs {
+  width: 30%;
+  height: 100%;
+  object-fit: cover;
+  border-bottom: 2px solid #f0f0f0;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+}
+#imgs img{
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  border-radius: 15px;
+}
+
+#hotel_info{
+  width: 40%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: top;
+  padding: 15px;
+}
+#hotel_info h3{
+  font-size: 30px;
+}
+#hotel_info p{
+  font-size: 15px;
+  color: black;
+  line-height: 150%;
+
+}
+#hotel_info #price{
+  margin-top: 39px;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.actions{
+  width: 40%;
+  height: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  display: flex;
+ 
+}
+.delete, #edit{
+  height: 40px;
+  width: 120px;
+  border-radius:13px;
+  color: rgb(255, 255, 255);
+  background-color: #8478E8;
+  font-size: 15px;
+  font-weight: 200;
+  margin: 10px;
+
+}
+.delete{
+  background-color: #D6283F;
+}
+
+/* **********8
+MEDIA QUERY
+****************/
+
+@media screen and (max-width:1200px) {
+    .container{
+      width: 94%;
+      grid-template-columns: 7rem auto 14rem;
+    }
+    aside .sidebar h3{
+      display: none;
+    }
+    aside .sidebar a{
+      width: 5.6rem;
+    }
+    aside .sidebar a:last-child{
+      position: relative;
+      margin-top: 1.8rem;
+    }
+    main .insights{
+      display: grid;
+      grid-template-columns: repeat(1,1fr);
+    }
+}
+
+/* ****************
+MEDIA QUERY PHONE
+************************/
+
+@media screen and (max-width:768px) {
+  .container{
+    width: 100%;
+    grid-template-columns: repeat(1,1fr);
+  
+  }
+  
+  aside{
+    position: fixed;
+    width: 18rem;
+    z-index: 3;
+    height: 100vh;
+    background-color: var(--clr-white);
+    display: none;
+    left: -110px;
+    animation:  menuLeft .3s ease forwards;
+  }
+  
+  @keyframes menuLeft {
+      to{
+        left: 0;
+      }
+  }
+  
+
+
+
+  aside .logo h2{
+       display: inline;
+  }
+  aside .sidebar h3{
+    display: inline;
+  }
+  aside .sidebar a{
+    width: 100%;
+    height: 3.4rem;
+  }
+  aside .top div.close  span{
+     display: inline;
+     position: absolute;
+     right: 0;
+     margin-right:30px;
+     font-size: 35px;
+     cursor: pointer;
+  }
+
+    
+
+
+ main .insights{
+  display: grid;
+  grid-template-columns: repeat(1,1fr);
+  gap: 1.6rem;
+  padding: 40px;
+ }
+ main .recent_order{
+  padding: 30px;
+  margin: 0 auto;
+ }
+
+
+
+}
+
+
+
+
+

@@ -9,7 +9,7 @@ $userFullName = $isLoggedIn ? $_SESSION['fname'] . ' ' . $_SESSION['lname'] : nu
 $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
 
 // Fetch popular hotels for display
-$stmt = $pdo->query("SELECT * FROM hotels LIMIT 6");
+$stmt = $pdo->query("SELECT * FROM hotels limit 6");
 $hotels = $stmt->fetchAll();
 ?>
 
@@ -29,7 +29,7 @@ $hotels = $stmt->fetchAll();
         <div id="option">
             <a href="#">Home</a>
             <a href="./flights.php">Flights</a>
-            <a href="#">Cab</a>
+            <a href="./admin.php">Admin</a>
             <div id="profile" style="display: <?= $isLoggedIn ? 'block' : 'none'; ?>;" onclick="toggleProfileBox()">
                 <img src="<?= htmlspecialchars($profilePicture); ?>" alt="Profile Picture">
             </div>
@@ -181,11 +181,8 @@ $hotels = $stmt->fetchAll();
         </div>
       </div>
      </footer>
-<script>
-function toggleProfileBox() {
-    const profileBox = document.getElementById('profile_box');
-    profileBox.style.display = profileBox.style.display === 'block' ? 'none' : 'block';
-}
-</script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     
+<script src="./js/script.js"></script>
 </body>
 </html>

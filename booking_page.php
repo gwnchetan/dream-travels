@@ -1,4 +1,4 @@
-    <?php
+<?php
     session_start();
     require_once "./PHP/config.php";
 
@@ -58,7 +58,7 @@
 
             // Fetch rooms for the hotel
             $rooms = $roomStmt->fetchAll(PDO::FETCH_ASSOC);
-            $hotelRooms[$hotelId] = $rooms; // Store rooms by hotel ID
+            $hotelRooms[$hotelId] = $rooms; 
         }
     }
     ?>
@@ -80,9 +80,7 @@
             <div id="option">
                 <a href="#">Home</a>
                 <a href="./flights.php">Flights</a>
-                <a href="#">Cab</a>
-
-                <!-- Profile section -->
+                 <!-- Profile section -->
                 <div id="profile" style="display: <?php echo $isLoggedIn ? 'block' : 'none'; ?>;" onclick="toggleProfileBox()">
                     <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture">
                 </div>
@@ -215,7 +213,11 @@
                                 }
                                 ?>
                             </p>
-                            <button class="select-room-btn">Select Room</button>
+                            <a href="./room_details.php?id=<?php echo $hotel['id']; ?>&location=<?php echo urlencode($location); ?>&check_in=<?php echo urlencode($check_in); ?>&check_out=<?php echo urlencode($check_out); ?>&guests=<?php echo urlencode($guests); ?>&user_id=<?php echo $_SESSION['user_id']; ?>">
+    <button class="select-room-btn">Select Room</button>
+</a>
+
+
                         </div>
                     </div>
                 <?php endforeach; ?>

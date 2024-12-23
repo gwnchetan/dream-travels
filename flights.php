@@ -1,15 +1,16 @@
 <?php
 session_start();
+require_once "./PHP/config.php";
 
-// Check if user is logged in
+// Check if the user is logged in
 $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
-
-// Get user's first letter of first name, if available
-$firstLetter = $isLoggedIn && isset($_SESSION['fname']) ? strtoupper($_SESSION['fname'][0]) : null;
-
-// Combine first and last name for full name display, if available
+$profilePicture = $isLoggedIn && isset($_SESSION['profile_picture']) ? $_SESSION['profile_picture'] : './imgs/client-2.jpg';
 $userFullName = $isLoggedIn ? $_SESSION['fname'] . ' ' . $_SESSION['lname'] : null;
 $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
+
+// Fetch popular hotels for display
+$stmt = $pdo->query("SELECT * FROM hotels limit 6");
+$hotels = $stmt->fetchAll();
 ?>
 
 
@@ -32,38 +33,34 @@ $userEmail = $isLoggedIn ? $_SESSION['email'] : null;
   <body>
     <div id="page1">
     <div id="wrap">
-        <nav>
-          <div class="nav__logo"><h3>Dreams Travelers</h3></div>
-          <div id="option">
-            <a href="./index.php">Home</a>
+    <nav>
+        <div class="nav__logo"><h3>Dreams Travelers</h3></div>
+        <div id="option">
+            <a href="./index.php">Hotels</a>
             <a href="./flights.php">Flights</a>
-            <a href="#">Cab</a>
-
-            <!-- Profile section -->
-            <div id="profile" style="display: <?php echo $isLoggedIn ? 'block' : 'none'; ?>;">
-                <img src="./imgs/client-1.jpg" alt="Profile Picture" onclick="toggleProfileBox()" />
+            <a href="./admin.php">Admin</a>
+            <div id="profile" style="display: <?= $isLoggedIn ? 'block' : 'none'; ?>;" onclick="toggleProfileBox()">
+                <img src="<?= htmlspecialchars($profilePicture); ?>" alt="Profile Picture">
             </div>
-            <div id="login_btn" style="display: <?php echo $isLoggedIn ? 'none' : 'block'; ?>;">
+            <div id="login_btn" style="display: <?= $isLoggedIn ? 'none' : 'block'; ?>;">
                 <a href="./loginpage.php">Login</a>
             </div>
-
-            <!-- Profile box -->
             <div id="profile_box" style="display: none;">
-                <div class="profile-info">
-                    <img src="./imgs/client-1.jpg" alt="Profile Picture" class="profile-pic">
-                    <p class="profile-name"><?php echo htmlspecialchars($userFullName); ?></p>
-                    <p class="profile-email"><?php echo htmlspecialchars($userEmail); ?></p>
+                <div id="profile_border">
+                    <div class="profile-info">
+                        <img src="<?= htmlspecialchars($profilePicture); ?>" alt="Profile Picture" class="profile-pic">
+                        <p class="profile-name"><?= htmlspecialchars($userFullName); ?></p>
+                    </div>
+                    <p class="profile-email"><?= htmlspecialchars($userEmail); ?></p>
+                    <hr> 
+                    <ul class="profile-menu">
+                        <li><a href="./profilepage.php"><i class="ri-settings-line"></i> Settings</a></li>
+                        <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
+                    </ul>
                 </div>
-                <ul class="profile-menu">
-                    <li><a href="./bookings.php"><i class="ri-bookmark-line"></i> My Bookings</a></li>
-                    <li><a href="./wishlist.php"><i class="ri-heart-line"></i> My Wishlist</a></li>
-                    <li><a href="./settings.php"><i class="ri-settings-line"></i> Settings</a></li>
-                    <li><a href="./help.php"><i class="ri-question-line"></i> Help Center</a></li>
-                    <li><a href="./PHP/logout.php" id="logout"><i class="ri-logout-box-line"></i> Sign Out</a></li>
-                </ul>
             </div>
-          </div>
-        </nav>
+        </div>
+    </nav>
       </div>
       
 <header class="section__container header__container">
